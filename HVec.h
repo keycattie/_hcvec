@@ -35,8 +35,8 @@ struct HVecT
   //    std::weak_ordering::equivalent;
   //}
   auto sum(const HVecT& b) const;
-  auto mul(const float a) const;
-  auto norm(void) const;
+  auto mul(const float a);
+  auto norm(void);
   float dprod(const HVecT& b) const;
   auto cprod(const HVecT& b) const;
 
@@ -50,6 +50,7 @@ HVecT<dim>::size(void) const
   return dim;
 }
 
+// Длина вектора
 template<unsigned dim>
 inline float
 HVecT<dim>::vlen(void) const
@@ -74,6 +75,7 @@ HVecT<dim>::operator==(const HVecT& b) const
   return (*this).vlen() == b.vlen();
 }
 
+// Векторное сложение
 template<unsigned dim>
 inline auto
 HVecT<dim>::sum(const HVecT& b) const
@@ -81,21 +83,30 @@ HVecT<dim>::sum(const HVecT& b) const
   throw std::logic_error("Function not yet implemented");
 } // TODO implementation
 
+// Умножение вектора на скаляр
 template<unsigned dim>
 inline auto
-HVecT<dim>::mul(const float a) const
+HVecT<dim>::mul(const float a)
 {
+  std::transform((this->d).begin(),
+                 (this->d).end(),
+                 (this->d).begin(),
+                 [a](float& n) { return (n * a); });
+}
 
-  throw std::logic_error("Function not yet implemented");
-} // TODO implementation
-
+// Нормализация вектора
 template<unsigned dim>
 inline auto
-HVecT<dim>::norm(void) const
+HVecT<dim>::norm(void)
 {
-  throw std::logic_error("Function not yet implemented");
-} // TODO implementation
+  auto v = std::array<float, dim>(this->d);
+  std::transform(v.begin(), v.end(), v.begin(), [](float& n) {
+    return (n > 0.0f) ? (n) : (-n);
+  });
+  (*this).mul(1/(*std::max_element(v.begin(), v.end())));
+}
 
+// Скалярное произведение векторов
 template<unsigned dim>
 inline float
 HVecT<dim>::dprod(const HVecT& b) const
@@ -103,6 +114,7 @@ HVecT<dim>::dprod(const HVecT& b) const
   throw std::logic_error("Function not yet implemented");
 } // TODO implementation
 
+// Векторное произведение
 template<unsigned dim>
 auto
 HVecT<dim>::cprod(const HVecT<dim>& b) const
@@ -110,12 +122,14 @@ HVecT<dim>::cprod(const HVecT<dim>& b) const
   return cprod(*this, b);
 }
 
+// Векторное произведение (размерность 2)
 static inline float
 cprod(const HVecT<2>& d, const HVecT<2>& b)
 {
   return d[0] * b[1] - d[1] * b[0];
 }
 
+// Векторное произведение (размерность 2)
 static inline HVecT<3>
 cprod(const HVecT<3>& d, const HVecT<3>& b)
 {
@@ -124,6 +138,7 @@ cprod(const HVecT<3>& d, const HVecT<3>& b)
                    d[0] * b[1] - d[1] * b[0] };
 }
 
+// Сортировка Шелла (по последовательности Циура)
 template<typename T>
 void
 shell_sort(T first, T last)
@@ -141,6 +156,7 @@ shell_sort(T first, T last)
   }
 }
 
+// Строковое представление вектора
 template<unsigned dim>
 std::string
 HVecT<dim>::to_string(void)

@@ -178,6 +178,19 @@ main()
   ASSERT(vec3b <= vec3a);
   TESTEND;
 
+  TEST("mul", true);
+  auto vec3a = HVec<3>{ .1f, -.2f, .3f };
+  auto vec3b = HVec<3>{ .2f, -.4f, .6f };
+  vec3a.mul(2.0f);
+  ASSERT(vec3b == vec3a);
+  TESTEND;
+  TEST("norm", true);
+  auto vec3a = HVec<3>{ .1f, -.2f, .5f };
+  auto vec3b = HVec<3>{ .2f, -.4f, 1.0f };
+  vec3a.norm();
+  ASSERT(vec3b == vec3a);
+  TESTEND;
+
   TEST("to_string", true);
   auto vec3a = HVec<3>{ .1f, .2f, .3f };
   ASSERT(vec3a.to_string() == "HVec<3>{0.100000 0.200000 0.300000}");
