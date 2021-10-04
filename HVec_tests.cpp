@@ -201,7 +201,7 @@ main()
   TEST("cprod3", true);
   auto vec3a = HVec<3>{ .1f, .2f, .3f };
   auto vec3b = HVec<3>{ .4f, .5f, .6f };
-  auto vec3c = HVec<3>{ -.03f, .06f, -.03f};
+  auto vec3c = HVec<3>{ -.03f, .06f, -.03f };
   vec3a = vec3a.cprod(vec3b);
   ASSERT(vec3a.eq(vec3c));
   TESTEND;

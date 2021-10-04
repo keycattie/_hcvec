@@ -80,10 +80,9 @@ HVecT<dim>::eq(const HVecT& b, const float delta) const
 {
   auto v = std::array<float, dim>(this->d);
   unsigned i = 0;
-  return std::all_of(
-    v.begin(), v.end(), [&i, &b, delta](float& n) {
-      return ( fabsf(n - b[i++]) < fabsf(delta));
-    });
+  return std::all_of(v.begin(), v.end(), [&i, &b, delta](float& n) {
+    return (fabsf(n - b[i++]) < fabsf(delta));
+  });
 }
 
 // Длина вектора
