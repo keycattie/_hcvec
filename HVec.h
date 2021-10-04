@@ -35,8 +35,8 @@ struct HVecT
   //    std::weak_ordering::equivalent;
   //}
   auto sum(const HVecT& b) const;
-  auto mul(const float a);
-  auto norm(void);
+  auto mul(const float a) const;
+  auto norm(void) const;
   float dprod(const HVecT& b) const;
   auto cprod(const HVecT& b) const;
 
@@ -86,24 +86,28 @@ HVecT<dim>::sum(const HVecT& b) const
 // Умножение вектора на скаляр
 template<unsigned dim>
 inline auto
-HVecT<dim>::mul(const float a)
+HVecT<dim>::mul(const float a) const
 {
-  std::transform((this->d).begin(),
-                 (this->d).end(),
-                 (this->d).begin(),
+  auto b = HVecT<dim>(this->d);
+  std::transform((b.d).begin(),
+                 (b.d).end(),
+                 (b.d).begin(),
                  [a](float& n) { return (n * a); });
+  return b;
 }
 
 // Нормализация вектора
 template<unsigned dim>
 inline auto
-HVecT<dim>::norm(void)
+HVecT<dim>::norm(void) const
 {
+  auto b = HVecT<dim>(this->d);
   auto v = std::array<float, dim>(this->d);
   std::transform(v.begin(), v.end(), v.begin(), [](float& n) {
     return (n > 0.0f) ? (n) : (-n);
   });
-  (*this).mul(1/(*std::max_element(v.begin(), v.end())));
+  b = b.mul(1/(*std::max_element(v.begin(), v.end())));
+  return b;
 }
 
 // Скалярное произведение векторов
