@@ -7,9 +7,11 @@
 #include <stdexcept>
 #include <string>
 
+#ifndef HVecT
 #define HVecT HVec
-#define xstrgf(s) strgf(s)
-#define strgf(s) #s
+#endif
+#define HVecT_xstrgf(s) HVecT_strgf(s)
+#define HVecT_strgf(s) #s
 
 template<unsigned dim>
 struct HVecT
@@ -202,7 +204,7 @@ template<unsigned dim>
 std::string
 HVecT<dim>::to_string(void)
 {
-  auto s = std::string(xstrgf(HVecT));
+  auto s = std::string(HVecT_xstrgf(HVecT));
   s += "<" + std::to_string(dim) + ">{" +
        std::accumulate(std::next((this->d).begin()),
                        (this->d).end(),
@@ -215,6 +217,6 @@ HVecT<dim>::to_string(void)
   return s;
 }
 
-#undef strgf
-#undef xstrgf
+#undef HVecT_strgf
+#undef HVecT_xstrgf
 #undef HVecT
